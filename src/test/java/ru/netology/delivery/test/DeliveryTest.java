@@ -2,6 +2,7 @@ package ru.netology.delivery.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
+import static java.time.zone.ZoneRulesProvider.refresh;
 
 class DeliveryTest {
 
@@ -68,8 +70,9 @@ class DeliveryTest {
         form.$$("button.button").last().click();
 
         $("[data-test-id=success-notification] .notification__content")
-                .shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDate), Duration.ofSeconds(15))
+                .shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDate), Duration.ofSeconds(5))
                 .shouldBe(Condition.visible);
+        refresh();
 
         form.$$("button.button").last().click();
         $("[data-test-id=replan-notification] .notification__content button").click();
@@ -78,7 +81,7 @@ class DeliveryTest {
         form.$("[data-test-id=date] input").setValue(secondMeetingDate);
 
         $("[data-test-id=success-notification] .notification__content")
-                .shouldHave(Condition.text("Встреча успешно запланирована на " + secondMeetingDate), Duration.ofSeconds(15))
+                .shouldHave(Condition.text("Встреча успешно запланирована на " + secondMeetingDate), Duration.ofSeconds(5))
                 .shouldBe(Condition.visible);
     }
 
@@ -208,29 +211,8 @@ class DeliveryTest {
     }
 
     @Test
-    @DisplayName("Should not plan delivery with name with the letter ё")
-    void shouldPlanDeliveryWithNameWithTheLatter() {
-        SelenideElement form = $(".form");
-        var validUser = DataGenerator.Registration.generateUser("ru");
-        var daysToAddForFirstMeeting = 4;
-        var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
-
-        form.$("[ data-test-id=city] input").setValue(validUser.getCity());
-        form.$("[data-test-id=date] input").doubleClick();
-        $("[data-test-id=date] input").sendKeys(Keys.BACK_SPACE);
-        form.$("[data-test-id=date] input").setValue(firstMeetingDate);
-        form.$("[data-test-id=name] input").setValue("Шабалин Семён");
-        form.$("[data-test-id=phone] input").setValue(validUser.getPhone());
-        form.$("[data-test-id=agreement]").click();
-        form.$$("button.button").last().click();
-
-        $("[data-test-id='name'] [class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные" +
-                " неверно. Допустимы только русские буквы, пробелы и дефисы."));
-    }
-
-    @Test
     @DisplayName("Should not plan delivery with Empty Phone Number")
-    void ShouldNotPlanDeliveryWithPhoneNumberOverTheLimit() {
+    void ShouldNotPlanDeliveryWithPhoneNumberEmpty() {
         SelenideElement form = $(".form");
         var validUser = DataGenerator.Registration.generateUser("ru");
         var daysToAddForFirstMeeting = 4;
@@ -241,7 +223,7 @@ class DeliveryTest {
         $("[data-test-id=date] input").sendKeys(Keys.BACK_SPACE);
         form.$("[data-test-id=date] input").setValue(firstMeetingDate);
         form.$("[data-test-id=name] input").setValue(validUser.getName());
-        form.$("[data-test-id=phone] input").setValue(" ");
+        form.$("[data-test-id=phone] input").setValue("");
         form.$("[data-test-id=agreement]").click();
         form.$$("button.button").last().click();
 

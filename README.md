@@ -4,4 +4,4 @@
 
 Project Status
 
-[[![Build status](https://ci.appveyor.com/api/projects/status/u45m0lqdu5j4aaxi?svg=true)](https://ci.appveyor.com/project/Bangold666/javaaqa-patterns-change-of-date-homework-5)
+![Build status](https://ci.appveyor.com/api/projects/status/u45m0lqdu5j4aaxi?svg=true)](https://ci.appveyor.com/project/Bangold666/javaaqa-patterns-change-of-date-homework-5)
